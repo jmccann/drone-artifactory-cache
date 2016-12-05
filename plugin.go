@@ -10,28 +10,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-// var artifactoryCmd = cli.Command{
-// 	Name:   "artifactory",
-// 	Usage:  "cache to artifactory",
-// 	Action: artifactoryPlugin,
-// 	Flags: []cli.Flag{
-// 		cli.StringFlag{
-// 			Name:   "url",
-// 			Usage:  "artifactory url",
-// 			EnvVar: "PLUGIN_URL,CACHE_ARTIFACTORY_URL",
-// 		},
-// 		cli.StringFlag{
-// 			Name:   "username",
-// 			Usage:  "artifactory username",
-// 			EnvVar: "PLUGIN_USERNAME,CACHE_ARTIFACTORY_USERNAME",
-// 		},
-// 		cli.StringFlag{
-// 			Name:   "password",
-// 			Usage:  "artifactory password",
-// 			EnvVar: "PLUGIN_PASSWORD,CACHE_ARTIFACTORY_PASSWORD",
-// 		},
-// 	},
-// }
 var artifactoryFlags = []cli.Flag{
 	cli.StringFlag{
 		Name:   "url",
