@@ -56,7 +56,7 @@ func (c Cache) Restore(src string) error {
 func restoreCache(src string, s storage.Storage, a archive.Archive) error {
 	reader, writer := io.Pipe()
 
-	cw := make(chan error)
+	cw := make(chan error, 1)
 	defer close(cw)
 
 	go func() {
@@ -79,7 +79,7 @@ func rebuildCache(src string, dst string, s storage.Storage, a archive.Archive) 
 	reader, writer := io.Pipe()
 	defer reader.Close()
 
-	cw := make(chan error)
+	cw := make(chan error, 1)
 	defer close(cw)
 
 	go func() {
