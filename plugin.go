@@ -14,17 +14,17 @@ var artifactoryFlags = []cli.Flag{
 	cli.StringFlag{
 		Name:   "url",
 		Usage:  "artifactory url",
-		EnvVar: "PLUGIN_URL,CACHE_ARTIFACTORY_URL",
+		EnvVar: "PLUGIN_URL,ARTIFACTORY_CACHE_URL",
 	},
 	cli.StringFlag{
 		Name:   "username",
 		Usage:  "artifactory username",
-		EnvVar: "PLUGIN_USERNAME,CACHE_ARTIFACTORY_USERNAME",
+		EnvVar: "PLUGIN_USERNAME,ARTIFACTORY_CACHE_USERNAME",
 	},
 	cli.StringFlag{
 		Name:   "password",
 		Usage:  "artifactory password",
-		EnvVar: "PLUGIN_PASSWORD,CACHE_ARTIFACTORY_PASSWORD",
+		EnvVar: "PLUGIN_PASSWORD,ARTIFACTORY_CACHE_PASSWORD",
 	},
 }
 
