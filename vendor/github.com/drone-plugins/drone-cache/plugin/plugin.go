@@ -53,5 +53,5 @@ type plugin struct {
 	Filename string
 	Path     string
 	Mode     string
-	Mount    string
+	Mount    []string
 }

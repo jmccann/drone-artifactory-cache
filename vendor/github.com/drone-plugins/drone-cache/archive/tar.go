@@ -20,55 +20,62 @@ func NewTarArchive() Archive {
 	return &tarArchive{}
 }
 
-func (a *tarArchive) Pack(src string, w io.Writer) error {
-	// ensure the src actually exists before trying to tar it
-	if _, err := os.Stat(src); err != nil {
-		return err
-	}
-
+func (a *tarArchive) Pack(srcs []string, w io.Writer) error {
 	tw := tar.NewWriter(w)
 	defer tw.Close()
 
-	// walk path
-	return filepath.Walk(src, func(path string, fi os.FileInfo, err error) error {
-		if err != nil {
+	// Loop through each source
+	var fwErr error
+	for _, s := range srcs {
+		// ensure the src actually exists before trying to tar it
+		if _, err := os.Stat(s); err != nil {
 			return err
 		}
 
-		var link string
-		if fi.Mode()&os.ModeSymlink == os.ModeSymlink {
-			if link, err = os.Readlink(path); err != nil {
+		// walk path
+		fwErr = filepath.Walk(s, func(path string, fi os.FileInfo, err error) error {
+			if err != nil {
 				return err
 			}
-			log.Infof("Symbolic link found at %s", link)
-		}
 
-		header, err := tar.FileInfoHeader(fi, fi.Name())
-		if err != nil {
+			var link string
+			if fi.Mode()&os.ModeSymlink == os.ModeSymlink {
+				if link, err = os.Readlink(path); err != nil {
+					return err
+				}
+				log.Infof("Symbolic link found at %s", link)
+			}
+
+			header, err := tar.FileInfoHeader(fi, fi.Name())
+			if err != nil {
+				return err
+			}
+
+			header.Name = strings.TrimPrefix(filepath.ToSlash(path), "/")
+
+			if err = tw.WriteHeader(header); err != nil {
+				return err
+			}
+
+			if !fi.Mode().IsRegular() {
+				log.Debugf("Directory found at %s", path)
+				return nil
+			}
+
+			log.Debugf("File found at %s", path)
+
+			file, err := os.Open(path)
+			if err != nil {
+				return err
+			}
+
+			defer file.Close()
+			_, err = io.Copy(tw, file)
 			return err
-		}
+		})
+	}
 
-		header.Name = strings.TrimPrefix(filepath.ToSlash(path), "/")
-
-		if err = tw.WriteHeader(header); err != nil {
-			return err
-		}
-
-		if !fi.Mode().IsRegular() {
-			log.Debugf("Directory found at %s", path)
-			return nil
-		}
-
-		log.Debugf("File found at %s", path)
-
-		file, err := os.Open(path)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-		_, err = io.Copy(tw, file)
-		return err
-	})
+	return fwErr
 }
 
 func (a *tarArchive) Unpack(dst string, r io.Reader) error {

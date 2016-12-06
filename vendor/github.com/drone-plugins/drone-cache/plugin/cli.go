@@ -3,6 +3,7 @@ package plugin
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/urfave/cli"
@@ -93,11 +94,11 @@ func newPlugin(c *cli.Context) (*plugin, error) {
 	}
 
 	var mode string
-	var mount string
+	var mount []string
 
 	if rebuild {
 		// Look for the mount points to rebuild
-		mount = c.GlobalString(mountFlag)
+		mount = strings.Split(c.GlobalString(mountFlag), ",")
 
 		if len(mount) == 0 {
 			return nil, errors.New("No mounts specified")
@@ -106,7 +107,6 @@ func newPlugin(c *cli.Context) (*plugin, error) {
 		mode = rebuildMode
 	} else {
 		mode = restoreMode
-		mount = ""
 	}
 
 	// Get the path to place the cache files
