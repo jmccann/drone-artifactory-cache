@@ -13,4 +13,3 @@ RUN apk update && \
 
 ADD drone-artifactory-cache /bin/
 ENTRYPOINT ["/bin/drone-artifactory-cache"]
-# CMD ["artifactory"]
