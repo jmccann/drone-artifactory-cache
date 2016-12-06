@@ -73,6 +73,8 @@ func (a *tarArchive) Pack(srcs []string, w io.Writer) error {
 			_, err = io.Copy(tw, file)
 			return err
 		})
+
+		return fwErr
 	}
 
 	return fwErr

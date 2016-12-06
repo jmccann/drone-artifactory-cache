@@ -3,7 +3,6 @@ package plugin
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/urfave/cli"
@@ -35,7 +34,7 @@ func PluginFlags() []cli.Flag {
 			Usage:  "path",
 			EnvVar: "PLUGIN_PATH",
 		},
-		cli.StringFlag{
+		cli.StringSliceFlag{
 			Name:   "mount",
 			Usage:  "cache directories",
 			EnvVar: "PLUGIN_MOUNT",
@@ -98,7 +97,7 @@ func newPlugin(c *cli.Context) (*plugin, error) {
 
 	if rebuild {
 		// Look for the mount points to rebuild
-		mount = strings.Split(c.GlobalString(mountFlag), ",")
+		mount = c.GlobalStringSlice(mountFlag)
 
 		if len(mount) == 0 {
 			return nil, errors.New("No mounts specified")
